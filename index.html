@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <title>Матрица с квадратами разных цветов (Онлайн)</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+        }
+
+        #matrix {
+            margin-top: 10px;
+        }
+
+        .square {
+            width: 26px;
+            height: 26px;
+            display: inline-block;
+            background-color: #000;
+            border: 1px solid #333;
+        }
+
+        #palette {
+            margin-top: 30px;
+        }
+
+        .palette-color {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
+
+        .selected-color {
+            border: 2px solid #fff;
+        }
+    </style>
+</head>
+<body>
+  <h2>MATRIX</h2>
+    <div id="matrix"></div>
+    <div id="palette">
+        <h2>COLORS</h2>
+        <div class="palette-color" style="background-color: #61BD6D;"></div>
+        <div class="palette-color" style="background-color: #F7DA64;"></div>
+        <div class="palette-color" style="background-color: #FBA026;"></div>
+        <div class="palette-color" style="background-color: #E14938;"></div>
+		<div class="palette-color" style="background-color: #9365B8;"></div>
+		<div class="palette-color" style="background-color: #2969B0;"></div>
+		<div class="palette-color" style="background-color: #EFEFEF;"></div>
+		<div class="palette-color" style="background-color: #000000;"></div>
+    </div>
+    
+    <script>
+        // Функция для изменения цвета квадрата
+        function changeColor(squareId, color) {
+            var square = document.getElementById(squareId);
+            if (square) {
+                square.style.backgroundColor = color;
+            }
+        }
+        
+        // Устанавливаем WebSocket-соединение
+        var socket = new WebSocket('ws://localhost:8080');
+        
+        // Обработчик события открытия соединения
+        socket.onopen = function() {
+            console.log('WebSocket соединение установлено.');
+        };
+       
+        
+        // Создание матрицы с квадратами
+        var matrix = document.getElementById('matrix');
+        for (var row = 1; row <= 16; row++) {
+            for (var col = 1; col <= 32; col++) {
+                var squareId = 'square_' + row + '_' + col;
+                var square = document.createElement('div');
+                square.id = squareId;
+                square.className = 'square';
+                square.style.backgroundColor = 'black';
+                
+                // Добавляем обработчик события при клике на квадрат
+                square.addEventListener('click', function() {
+                    var selectedColor = document.querySelector('.selected-color');
+                    var color = selectedColor.style.backgroundColor;
+                    changeColor(this.id, color);
+                    
+                    // Отправляем сообщение с информацией о изменении цвета квадрата
+                    var message = {
+                        squareId: this.id,
+                        color: color
+                    };
+                    socket.send(JSON.stringify(message));
+                });
+                
+                matrix.appendChild(square);
+            }
+            matrix.appendChild(document.createElement('br'));
+        }
+		
+		
+        // Обработчик события получения сообщения
+       socket.onmessage = function(event) {
+		var data = JSON.parse(event.data);
+
+		if (Array.isArray(data)) {
+		// Обработка массива объектов
+			data.forEach(function(obj) {
+			var squareId = obj.squareId;
+			var color = obj.color;
+			changeColor(squareId, color);
+    });
+  } 	else if (typeof data === 'object') {
+		// Обработка отдельного объекта
+			var squareId = data.squareId;
+			var color = data.color;
+			changeColor(squareId, color);
+  }
+};
+        
+        // Добавляем обработчик события при клике на цвет в палитре
+        var paletteColors = document.querySelectorAll('.palette-color');
+        paletteColors.forEach(function(paletteColor) {
+            paletteColor.addEventListener('click', function() {
+                // Удаляем класс у выбранного цвета в палитре
+                var selectedColor = document.querySelector('.selected-color');
+                if (selectedColor) {
+                    selectedColor.classList.remove('selected-color');
+                }
+                
+                // Добавляем класс к выбранному цвету
+                this.classList.add('selected-color');
+            });
+        });
+		
+    </script>
+</body>
+</html>
