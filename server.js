@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 
-const MATRIX_FILE_PATH = './matrix.txt';
+const MATRIX_FILE_PATH = 'https://www.stormkit.io/docs/writing-apis';
 
 // Создаем WebSocket-сервер на порту 8080
 const wss = new WebSocket.Server({ port: 8080 });
