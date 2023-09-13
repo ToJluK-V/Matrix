@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 
-const MATRIX_FILE_PATH = 'https://github.com/ToJluK-V/Matrix/blob/main/matrix.txt';
+const MATRIX_FILE_PATH = '/public/matrix.txt';
 
 // Создаем WebSocket-сервер на порту 8080
 const wss = new WebSocket.Server({ port: 8080 });
