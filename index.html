@@ -73,18 +73,10 @@
                 square.style.backgroundColor = color;
             }
         }
-		function getWebSocketServer() {
-			if (window.location.host === "ToJluK-V.github.io") {
-				return "wss://matrix-7fgfs3hyo-tojluk-v.vercel.app/";
-	} 		else if (window.location.host === "localhost:8000") {
-				return "ws://localhost:8001/";
-	} 		else {
-				throw new Error(`Unsupported host: ${window.location.host}`);
-			}
-}
+		
         
         // Устанавливаем WebSocket-соединение
-        var socket = new WebSocket(getWebSocketServer());
+        var socket = new WebSocket('wss://sivakovvanya.hosty.by:8001');
         
         // Обработчик события открытия соединения
         socket.onopen = function() {
