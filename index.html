@@ -75,7 +75,7 @@
         }
         
         // Устанавливаем WebSocket-соединение
-        var socket = new WebSocket('wss://serv-matrix.onrender.com');
+        var socket = new WebSocket('ws://localhost:8080');
         
         // Обработчик события открытия соединения
         socket.onopen = function() {
