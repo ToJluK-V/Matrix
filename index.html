@@ -76,7 +76,7 @@
 		
         
         // Устанавливаем WebSocket-соединение
-        var socket = new WebSocket('wss://sivakovvanya.hosty.by:8001');
+        var socket = new WebSocket('wss://sivakovvanya.hosty.by/server.js:8080');
         
         // Обработчик события открытия соединения
         socket.onopen = function() {
@@ -105,7 +105,9 @@
                         squareId: this.id,
                         color: color
                     };
-                    socket.send(JSON.stringify(message));
+					
+					socket.send(JSON.stringify(message));
+					
                 });
                 
                 matrix.appendChild(square);
